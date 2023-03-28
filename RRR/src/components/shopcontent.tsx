@@ -1,6 +1,6 @@
 import axios from 'axios';
 import react from 'react'
-import { useEffect, useState } from 'react';
+import { useEffect, useState,createContext,useContext } from 'react';
 
 // type Inventory = {
 //   "productName": string,
@@ -30,6 +30,12 @@ interface Inventory {
   "year": number
 }
 
+interface CartItem {
+  "name": string,
+  "price": number
+}
+
+
   
 
 export default function ShopContent() {
@@ -39,6 +45,9 @@ export default function ShopContent() {
   
   const [inventory, setInventory] = useState<Inventory[]>([])
   const [loading, setLoading] = useState(false)
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  
+
   
 
   useEffect(() => {
@@ -55,6 +64,23 @@ export default function ShopContent() {
 
     fetchData();
   }, []);
+  
+
+  const onClickHandler = (e) => {
+    let a = e.target.parentNode.childNodes[1].innerHTML
+    let b = e.target.parentNode.childNodes[2].innerHTML
+    let item = {
+      "name": a,
+      "price": b
+    }
+    console.log(a,b)
+    setCartItems([...cartItems, item])
+      
+  };
+  useEffect(() => {
+    console.log(cartItems)
+  }, [cartItems])
+
 
   
  
@@ -67,9 +93,14 @@ export default function ShopContent() {
       {!loading && inventory.map((inventory) => (
         <div className="product-box">
           <img src={inventory.img} />
-          <h2 className={inventory.productName.replaceAll('_', ' ')}></h2>
-          <div className="price">${inventory.price}</div>
-          <i className="bx bx-shopping-bag add-cart"></i>
+          <h2 className="product-title">
+            {inventory.productName.replaceAll('_', ' ')}</h2>
+          <div className="price">price: ${inventory.price}</div>
+          <div className='id'>stock: {inventory.stock}</div>
+          <i className="bx bx-shopping-bag add-cart" onClick={
+            (e) =>
+          onClickHandler(e)
+          }></i>
     
       
   </div>
