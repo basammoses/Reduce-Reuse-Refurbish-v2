@@ -8,6 +8,7 @@ flask = "*"
 peewee = "*"
 psycopg2-binary = "*"
 autopep8 = "*"
+flask-cors = "*"
 
 [dev-packages]
 

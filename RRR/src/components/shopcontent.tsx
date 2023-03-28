@@ -1,7 +1,9 @@
 import axios from 'axios';
 import react from 'react'
-import { useEffect, useState, createContext, useContext } from 'react';
+import { useEffect, useState, createContext, useContext, useRef } from 'react';
 import classNames from 'classnames';
+import InventoryContext from '../contextprovider/inventorycontext';
+import { GetShoppingCart } from './cartcontent';
 
 
 
@@ -35,85 +37,114 @@ interface Inventory {
 }
 
 interface CartItem {
-  "name": string,
+  "productName": string,
   "price": number
+  "img": string
 }
 
 
   
 
+const api = axios.create({
+  baseURL: 'http://127.0.0.1:8000'
+});
 export default function ShopContent() {
-  const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000'
-  });
+
+  const childRef = useRef();
+
+  const handleChild = () => {
+    if (!childRef.current) return;
+    console.log(childRef.current);
+    childRef.current.fetchCart();
+  }
   
-  const [inventory, setInventory] = useState<Inventory[]>([])
+  
+ 
   const [loading, setLoading] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  createContext(cartItems)
+  // createContext(cartItems)
+
+  const inv = useContext(InventoryContext)
+
+  
   
   
 
   
 
-  useEffect(() => {
-    const fetchData = async () =>{
-      setLoading(true);
-      try {
-        const {data: response} = await api.get('/');
-        setInventory(response);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-    }
 
-    fetchData();
-  }, []);
   
 
-  const onClickHandler = (e) => {
-    let a = e.target.parentNode.childNodes[1].innerHTML
-    let b = e.target.parentNode.childNodes[2].innerHTML
-    let item = {
-      "name": a,
-      "price": b
+  const onClickHandler = (inventory) => {
+    let a = inventory.productName
+    let b = inventory.price
+    let c = inventory.img
+
+    let item:CartItem = {
+      "productName": a,
+      "price": b,
+      "img": c
     }
     console.log(a,b)
     setCartItems([...cartItems, item])
-      
+    console.log(inv)
+    api.post('/cart/add', item).then((response) => {
+      childRef.current.fetchCart();
+    })
+    
+    
   };
-  useEffect(() => {
-    console.log(cartItems)
-  }, [cartItems])
-
-const addToCartButton = classNames('bx', 'bx-shopping-bag', 'add-cart')
  
   
+
+  let addToCartButton = classNames('bx', 'bx-shopping-bag', 'add-cart')
+
+
+ 
+
+  
+
+
+ 
 
 
   return (
   
-    <div className="shop-content">
+
+
+
+
+
+   
+    <div>
+      <header>
+        <GetShoppingCart ref={childRef} />
+        
+
+      </header>
+      <section className="shop container">
+        <h2 className="section-title">Shop Refurbished</h2>
+        <div className="shop-content">
     
+      
       {loading && <div>Loading</div>}
-      {!loading && inventory.map((inventory) => (
+      {!loading && inv.map((inventory) => (
         <div className="product-box">
           <img src={inventory.img} />
           <h2 className="product-title">
             {inventory.productName.replaceAll('_', ' ')}</h2>
           <div className="price">price: ${inventory.price}</div>
           <div className='id'>stock: {inventory.stock}</div>
-          <i className={addToCartButton } onClick={
+          <i className={addToCartButton} onClick={
             (e) =>
-          onClickHandler(e)
+              onClickHandler(inventory)
           }></i>
-    
-      
-  </div>
+        </div>
       )
       )}
+        </div>
+      </section>
     </div>
   )
 

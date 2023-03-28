@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from peewee import *
 from playhouse.shortcuts import model_to_dict, dict_to_model
 import json
+from flask_cors import CORS
+from flask_cors import cross_origin
+
 
 
 
@@ -25,11 +28,19 @@ class Product(BaseModel):
     stock = IntegerField()
     img = CharField()
     
+class Cart(BaseModel):
+    productName = CharField()
+    price = FloatField()
+    img = CharField()
+    
     
 
 db.connect()
 db.drop_tables([Product])
 db.create_tables([Product])
+db.drop_tables([Cart])
+db.create_tables([Cart])
+
 
 f = open('inventory.json')
 
@@ -50,6 +61,7 @@ for product in data:
     )
     
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=['GET'])
 def get_all_products():
@@ -89,6 +101,7 @@ def update_product(productName):
 
 @app.route('/delete/<productName>', methods=['DELETE'])
 def delete_product(productName):
+    
     product = Product.get(Product.productName == productName)
     product.delete_instance()
     return jsonify(model_to_dict(product))
@@ -99,6 +112,39 @@ def search_product():
     products = Product.select().where(Product.productName.contains(payload['productName']))
     products = [model_to_dict(product) for product in products]
     return jsonify(products)
+  
+@app.route('/cart', methods=['GET'])
+def get_all_cart():
+    products = Cart.select()
+    products = [model_to_dict(product) for product in products]
+    return jsonify(products)
+
+@app.route('/cart/add', methods=['POST'])
+def add_cart():
+    payload = request.get_json()
+    product = dict_to_model(Cart, payload)
+    product.save()
+    return jsonify(model_to_dict(product))
+
+@app.route('/cart/delete/<productName>', methods=['DELETE'])
+@cross_origin()
+def delete_cart(productName):
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    product = Cart.get(Cart.productName == productName)
+    product.delete_instance()
+    return jsonify(model_to_dict(product))
+   
+  
+    
+    
+     
+    product = dict_to_model(Cart, payload)
+    product.save()
+    return jsonify(model_to_dict(product)) 
+
 
 app.run(debug=True, port=8000)
 
