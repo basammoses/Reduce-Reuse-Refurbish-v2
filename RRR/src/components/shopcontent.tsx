@@ -1,6 +1,10 @@
 import axios from 'axios';
 import react from 'react'
-import { useEffect, useState,createContext,useContext } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
+import classNames from 'classnames';
+
+
+
 
 // type Inventory = {
 //   "productName": string,
@@ -46,6 +50,9 @@ export default function ShopContent() {
   const [inventory, setInventory] = useState<Inventory[]>([])
   const [loading, setLoading] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  createContext(cartItems)
+  
   
 
   
@@ -81,9 +88,10 @@ export default function ShopContent() {
     console.log(cartItems)
   }, [cartItems])
 
-
-  
+const addToCartButton = classNames('bx', 'bx-shopping-bag', 'add-cart')
  
+  
+
 
   return (
   
@@ -97,7 +105,7 @@ export default function ShopContent() {
             {inventory.productName.replaceAll('_', ' ')}</h2>
           <div className="price">price: ${inventory.price}</div>
           <div className='id'>stock: {inventory.stock}</div>
-          <i className="bx bx-shopping-bag add-cart" onClick={
+          <i className={addToCartButton } onClick={
             (e) =>
           onClickHandler(e)
           }></i>

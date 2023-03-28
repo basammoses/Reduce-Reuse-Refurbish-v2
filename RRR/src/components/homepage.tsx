@@ -3,6 +3,7 @@ import { getInv } from "../axios/axios";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ShopContent from "./shopcontent";
+import "../index.css";
 interface Inventory {
   "color": string,
   "id": number,
@@ -42,7 +43,18 @@ export default function Homepage() {
       console.log
     }, []);
   
+  const openCart = () => {
+    const cart = document.querySelector('.cart');
+
+    cart?.classList.add('active');
+  }
   
+  const closeCart = () => {
+    const cart = document.querySelector('.cart');
+
+    cart?.classList.remove('active');
+  }
+
     
 
 
@@ -56,7 +68,7 @@ export default function Homepage() {
       <header>
         <div className="nav container">
           <a href="#" className="logo">Reduce Reuse Refurbish</a>
-          <i className='bx bx-shopping-bag' id="cart-icon"></i>
+          <i className='bx bx-shopping-bag' id="cart-icon" onClick={openCart}></i>
           
           <div className="cart">
             <h2 className="cart-title">Your Cart</h2>
@@ -69,8 +81,9 @@ export default function Homepage() {
               <div className="total-price">$</div>
             </div>
 
-            <button type="button" className="btn-buy ">Buy Now</button>
-            <i className='bx bx-x' id='close-cart'></i>
+            <button type="button" className="btn-buy">Buy Now</button>
+            <i 
+            className={`bx bx-x`}  id='close-cart' onClick={closeCart}></i>
 
           </div>
         </div>
