@@ -8,7 +8,7 @@ import InventoryContext from './contextprovider/inventorycontext'
 import { Inventory } from './contextprovider/inventorycontext'
 import CartContext from './contextprovider/cartcontext'
 import { CartItem } from './contextprovider/cartcontext'
-
+import { AuthProvider } from './firebaseAuth/AuthProvider'
 import axios from 'axios'
 
 let config = {
@@ -60,11 +60,13 @@ function App() {
 
   return (
     <>
+     <AuthProvider>
       <CartContext.Provider value={cartItems}>
       <InventoryContext.Provider value={inventory}>
         <Homepage />
         </InventoryContext.Provider>
         </CartContext.Provider>
+        </AuthProvider>
     </>
   )
 }
