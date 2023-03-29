@@ -1,81 +1,47 @@
 
-import React, {
-  ReactNode,
-  useEffect,
-  useState,
-  useContext,
-  createContext,
-} from 'react'
-import { auth } from './auth'
-import {
-  Auth,
-  UserCredential,
-  User,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from 'firebase/auth'
 
-export interface AuthProviderProps {
+import { User } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { SignOutUser, userStateListener } from "./auth";
+import { createContext, useState, useEffect, ReactNode } from "react";
+
+interface Props {
   children?: ReactNode
 }
 
-export interface UserContextState {
-  isAuthenticated: boolean
-  isLoading: boolean
-  id?: string
-}
+export const AuthContext = createContext({
+  // "User" comes from firebase auth-public.d.ts
+  currentUser: {} as User | null,
+  setCurrentUser: (_user:User) => {},
+  signOut: () => {}
+});
 
-export const UserStateContext = createContext<UserContextState>(
-  {} as UserContextState,
-)
-export interface AuthContextModel {
-  auth: Auth
-  user: User | null
-  signIn: (email: string, password: string) => Promise<UserCredential>
-  signUp: (email: string, password: string) => Promise<UserCredential>
-  sendPasswordResetEmail?: (email: string) => Promise<void>
-}
+export const AuthProvider = ({ children }: Props) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const navigate = useNavigate()
 
-export const AuthContext = React.createContext<AuthContextModel>(
-  {} as AuthContextModel,
-)
-
-export function useAuth(): AuthContextModel {
-  return useContext(AuthContext)
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null)
-
-  function signUp(email: string, password: string): Promise<UserCredential> {
-    return createUserWithEmailAndPassword(auth, email, password)
-  }
-
-  function signIn(email: string, password: string): Promise<UserCredential> {
-    return signInWithEmailAndPassword(auth, email, password)
-  }
-  function resetPassword(email: string): Promise<void> {
-    return sendPasswordResetEmail(auth, email)
-  }
   useEffect(() => {
-    //function that firebase notifies you if a user is set
-    const unsubsrcibe = auth.onAuthStateChanged((user) => {
-      setUser(user)
-    })
-    return unsubsrcibe
-  }, [])
+    const unsubscribe = userStateListener((user) => {
+      if (user) {
+        setCurrentUser(user)
+      }
+    });
+    return unsubscribe
+  }, [setCurrentUser]);
 
-  const values = {
-    signUp,
-    user,
-    signIn,
-    resetPassword,
-    auth,
+  // As soon as setting the current user to null, 
+  // the user will be redirected to the home page. 
+  const signOut = () => {
+    SignOutUser()
+    setCurrentUser(null)
+    navigate('/')
   }
-  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
-}
 
-export const useUserContext = (): UserContextState => {
-  return useContext(UserStateContext)
+  const value = {
+    currentUser, 
+    setCurrentUser,
+    signOut
+  }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

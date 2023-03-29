@@ -33,9 +33,16 @@ class Cart(BaseModel):
     price = FloatField()
     img = CharField()
     
+class User(BaseModel):
+    email = CharField()
+    uid = CharField()
+    name = CharField() | None
+
+
     
 
 db.connect()
+db.create_tables([User])
 db.drop_tables([Product])
 db.create_tables([Product])
 db.drop_tables([Cart])
@@ -140,10 +147,19 @@ def delete_cart(productName):
   
     
     
+# Create a user
+@app.route('/user', methods=['POST'])
+def create_user():
+    payload = request.get_json()
+    user = dict_to_model(User, payload)
+    user.save()
+    return jsonify(model_to_dict(user))
+
+
+
+
      
-    product = dict_to_model(Cart, payload)
-    product.save()
-    return jsonify(model_to_dict(product)) 
+
 
 
 app.run(debug=True, port=8000)

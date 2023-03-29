@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {Router, Route, Routes } from 'react-router-dom'
+
 import react from 'react'
 import './App.css'
 import Homepage from './components/homepage'
@@ -10,6 +10,8 @@ import CartContext from './contextprovider/cartcontext'
 import { CartItem } from './contextprovider/cartcontext'
 import { AuthProvider } from './firebaseAuth/AuthProvider'
 import axios from 'axios'
+import { SignIn } from './SignIn/SignIn'
+import { SignUp } from './SignUp/SignUp'
 
 let config = {
   headers: {
@@ -60,13 +62,30 @@ function App() {
 
   return (
     <>
-     <AuthProvider>
-      <CartContext.Provider value={cartItems}>
-      <InventoryContext.Provider value={inventory}>
-        <Homepage />
-        </InventoryContext.Provider>
-        </CartContext.Provider>
-        </AuthProvider>
+   
+      <Routes>
+          <Route path="/sign-in" element={
+            <AuthProvider>
+            
+              <SignIn />
+            </AuthProvider>} />
+          <Route path="/sign-up" element={
+            <AuthProvider>
+              <SignUp />
+            </AuthProvider>
+          } />
+        
+        
+
+        <Route path="/" element={<CartContext.Provider value={cartItems}>
+          <InventoryContext.Provider value={inventory}>
+            
+            <Homepage />
+            
+          </InventoryContext.Provider>
+        </CartContext.Provider>} />
+      </Routes>
+        
     </>
   )
 }
