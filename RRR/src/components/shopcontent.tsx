@@ -89,7 +89,7 @@ export default function ShopContent() {
     console.log(a,b)
     setCartItems([...cartItems, item])
     console.log(inv)
-    api.post('/cart/add', item).then((response) => {
+    api.post('/cart/add', item).then(() => {
       childRef.current.fetchCart();
     })
     
