@@ -4,7 +4,7 @@ import { useEffect, useState, createContext, useContext, useRef } from 'react';
 import classNames from 'classnames';
 import InventoryContext from '../contextprovider/inventorycontext';
 import { GetShoppingCart } from './cartcontent';
-
+import { useToast } from '@chakra-ui/toast';
 
 
 
@@ -91,7 +91,12 @@ export default function ShopContent() {
     console.log(inv)
     api.post('/cart/add', item).then(() => {
       childRef.current.fetchCart();
-    })
+    }).then(() => {
+      
+      
+    }
+    )
+
     
     
   };
@@ -101,6 +106,7 @@ export default function ShopContent() {
   let addToCartButton = classNames('bx', 'bx-shopping-bag', 'add-cart')
 
 
+  
  
 
   
@@ -130,16 +136,23 @@ export default function ShopContent() {
       
       {loading && <div>Loading</div>}
       {!loading && inv.map((inventory) => (
-        <div className="product-box">
-          <img src={inventory.img} />
+        <div className="product-box"
+        >
+          <div className='image-container'>
           <h2 className="product-title">
             {inventory.productName.replaceAll('_', ' ')}</h2>
+            <img src={inventory.img} alt="" className='product-image' />
+            <div  className="product-info">
           <div className="price">price: ${inventory.price}</div>
-          <div className='id'>stock: {inventory.stock}</div>
-          <i className={addToCartButton} onClick={
-            (e) =>
-              onClickHandler(inventory)
-          }></i>
+              <div className='id'>stock: {inventory.stock}</div>
+            </div>
+            <div className="pulse">
+              <a onClick={(e) =>onClickHandler(inventory)}>Add To Cart!</a>
+            </div>
+            
+          </div>
+          
+          
         </div>
       )
       )}
