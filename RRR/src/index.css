@@ -156,20 +156,38 @@ header{
 }
 .logo{
   font: size 1.1rem;
-  color: white;
+  color: rgb(0, 0, 0);
   font-weight: 400;
   font-family: 'Unbounded', cursive;
   align-self: center;
   margin-bottom: 10px;
+
   
 
   
 }
 #cart-icon{
+  position: absolute;
   font-size: 1.8rem;
   cursor: pointer;
   align-self: flex-end;
   margin-right: 20px;
+  border: 1px solid #444;
+  border-radius: 10px ;
+  padding: 20px;
+  background: #fff;
+  max-height: 70px;
+  background: #fff;
+  padding: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 25px #000;
+  
+  border: 1px solid #444;  
+  text-align: center;
+  display: block;
+  color: #444;
+
+  
 
 }
 .cart{
@@ -181,7 +199,7 @@ header{
   padding: 20px;
   background: var(--bg-color);
   box-shadow: -2px 0 4px hsl(0 4% 15% / 10%);
-  transition: 0.3s;
+  transition: 0.5s;
 }
 .cart.active{
   right:0;

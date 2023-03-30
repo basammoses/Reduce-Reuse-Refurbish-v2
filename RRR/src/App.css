@@ -12,7 +12,7 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #ff0000aa);
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
@@ -39,4 +39,14 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.css-1jcr8pr-Box{
+  color:wheat;
+  background-color: black;
+}
+.css-1jcr8pr-Box:hover{
+  color: black;
+  background-color: wheat;
+  cursor: pointer;
 }
