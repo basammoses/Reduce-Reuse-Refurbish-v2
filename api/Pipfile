@@ -4,11 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-peewee = "*"
+django = "*"
 psycopg2-binary = "*"
-autopep8 = "*"
-flask-cors = "*"
+django-extensions = "*"
+ipython = "*"
+django-import-export = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+djangorestframework-jwt = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
