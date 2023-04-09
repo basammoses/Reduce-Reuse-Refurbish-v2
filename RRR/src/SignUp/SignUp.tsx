@@ -19,7 +19,7 @@ import { signUp, signInUser } from "../firebaseAuth/auth";
 import { Link } from "react-router-dom";
 import axios from "axios";
 interface SignupFormValues {
-  email: string;
+  username: string;
   password: string;
   repeatPassword: string;
 }
@@ -74,14 +74,14 @@ export const SignUp = ({ sx }: SignupProps): JSX.Element => {
       <BorderWrapper title="Create account">
         <Formik
           initialValues={{
-            email: "",
+            username: "",
             password: "",
             repeatPassword: ""
           }}
           onSubmit={async (values: SignupFormValues) => {
             setFormSubmitting(true);
             try {
-              const result = await signUp(values.email, values.password)
+              const result = await signUp(values.username, values.password)
                 console.log(`🚀 ~ signup result`, result);
               try {
                 redirect(DASHBOARD_PAGE_PATH);
@@ -94,7 +94,7 @@ export const SignUp = ({ sx }: SignupProps): JSX.Element => {
               setFormSubmitting(false);
             }
             try {
-              const result = await signInUser(values.email, values.password);
+              const result = await signInUser(values.username, values.password);
               console.log(`🚀 ~ signin result`, result);
               redirect(DASHBOARD_PAGE_PATH);
             } catch (error) {

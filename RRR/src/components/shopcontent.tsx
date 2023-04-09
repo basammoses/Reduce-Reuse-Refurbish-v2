@@ -37,7 +37,7 @@ interface Inventory {
 }
 
 interface CartItem {
-  "productName": string,
+  "product": string,
   "price": number
   "img": string
 }
@@ -81,15 +81,13 @@ export default function ShopContent() {
     let b = inventory.price
     let c = inventory.img
 
-    let item:CartItem = {
+    let item:any = {
       "productName": a,
-      "price": b,
-      "img": c
     }
     console.log(a,b)
     setCartItems([...cartItems, item])
     console.log(inv)
-    api.post('/cart/add', item).then(() => {
+    api.post('/cart/add_product/', item).then(() => {
       childRef.current.fetchCart();
     }).then(() => {
       

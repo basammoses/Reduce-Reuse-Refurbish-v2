@@ -9,7 +9,7 @@ import { DASHBOARD_PAGE_PATH, SIGN_UP_PAGE_PATH } from '../config/paths'
 import { signInUser } from '../firebaseAuth/auth'
 import { FormGroup } from '../FormGroup/FormGroup'
 import { BorderWrapper } from '../BorderWrapper/BorderWrapper'
-
+import {login, checkToken} from "../JWT/auth"
 
 
 export interface SignInProps {
@@ -17,12 +17,12 @@ export interface SignInProps {
 }
 
 interface SignInFormValues {
-  email: string
+  username: string
   password: string
 }
 
 const SignInSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Required'),
+  username: Yup.string().required('Required').min(3).max(200),
   password: Yup.string().required('Required').min(8).max(200),
 })
 
@@ -35,17 +35,20 @@ export const SignIn = ({ sx }: SignInProps): JSX.Element => {
     <BorderWrapper title="Welcome back" sx={{ ...sx }}>
       <Formik
         initialValues={{
-          email: '',
+          username: '',
           password: '',
         }}
         onSubmit={async (values: SignInFormValues) => {
           setFormSubmitting(true)
           try {
-            const result = await signInUser(values.email, values.password)
+            console.log(values.username, values.password)
+            
+            const result = await login(values.username,values.password)
             console.log(result)
-            redirect(DASHBOARD_PAGE_PATH)
-
-          } catch (error: unknown) {
+            const result2 = await checkToken()
+            console.log(result2)
+          }
+          catch (error: unknown) {
             let errorMessage = 'error.unknown'
             if (typeof error === 'string') {
               errorMessage = error.toUpperCase()
@@ -55,16 +58,36 @@ export const SignIn = ({ sx }: SignInProps): JSX.Element => {
             setFormError(errorMessage)
             setFormSubmitting(false)
           }
+          
+          
+          // try {
+          //   const result = await signInUser(values.email, values.password)
+          //   console.log(result)
+          //   redirect(DASHBOARD_PAGE_PATH)
+
+          // } catch (error: unknown) {
+          //   let errorMessage = 'error.unknown'
+          //   if (typeof error === 'string') {
+          //     errorMessage = error.toUpperCase()
+          //   } else if (error instanceof Error) {
+          //     errorMessage = error.message
+          //   }
+          //   setFormError(errorMessage)
+          //   setFormSubmitting(false)
+          // }
         }}
         validationSchema={SignInSchema}
       >
         {({ getFieldProps }) => (
           <Form>
-            <FormGroup label="You email address" name="email">
+            <FormGroup label="Your username" name="username">
               <Input
                 sx={{ borderColor: 'rgb(209, 218, 230)' }}
-                {...getFieldProps('email')}
-                id="email"
+                {...getFieldProps('username')}
+                type="username"
+
+                
+                id="username"
               />
             </FormGroup>
             <FormGroup label="Password" name="password">

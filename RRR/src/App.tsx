@@ -35,7 +35,7 @@ function App() {
     
     async function fetchData() {
       setLoading(true);
-       const {data: response} = await api.get('/');
+       const {data: response} = await api.get('/products');
       setInventory(response)
       setLoading(false);
     }

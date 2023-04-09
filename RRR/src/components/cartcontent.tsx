@@ -64,6 +64,7 @@ export const GetShoppingCart = forwardRef((props,ref) => {
 
   async function fetchCart() {
     const { data: response } = await api.get('/cart');
+    console.log(response)
     setCartItems(response)
   }
 
@@ -84,7 +85,7 @@ export const GetShoppingCart = forwardRef((props,ref) => {
     
   const handleDelete = (item) => {
     console.log(item.productName)
-    api.delete(`/cart/delete/${item.productName}`, config)
+    api.delete(`/carts/${item.productName}`, config)
       .then((response) => {
         console.log(response)
         fetchCart()
