@@ -8,13 +8,12 @@ import { AuthProvider } from './firebaseAuth/AuthProvider'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   
-  <BrowserRouter>
-    <AuthProvider>
+  
+ 
     
       <App />
       
-    </AuthProvider>
-  </BrowserRouter>
+   
   ,
   
 )

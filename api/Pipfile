@@ -13,6 +13,13 @@ djangorestframework = "*"
 django-cors-headers = "*"
 djangorestframework-jwt = "*"
 djangorestframework-simplejwt = "*"
+channels = "*"
+asgiref = "*"
+
+gunicorn = "*"
+dj-database-url = "*"
+daphne = "*"
+channels-redis = "*"
 
 [dev-packages]
 

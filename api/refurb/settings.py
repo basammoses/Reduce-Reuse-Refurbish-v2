@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cart',
     'django_extensions',
     'import_export',
     'corsheaders',
     'rest_framework',
+    'cart',
+    'chats',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'refurb.wsgi.application'
+ASGI_APPLICATION = "refurb.routing.application"
+
 
 
 # Database
@@ -95,6 +99,12 @@ DATABASES = {
         'HOST': 'localhost'
     }
 }
+
+INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
+import socket
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+
 
 
 

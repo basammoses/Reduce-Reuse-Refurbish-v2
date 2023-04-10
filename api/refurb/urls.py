@@ -22,13 +22,19 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from .api_router import CustomObtainAuthTokenView, UserViewSet, MessageViewSet, ConversationViewSet
+from django.views.generic import TemplateView
+
+
 
 
 
 routers = routers.DefaultRouter()
 routers.register(r"products", views.ProductsViewSet, "products")
 routers.register(r"cart", views.CartViewSet, "cart")
-routers.register(r"users", views.UserViewSet, "users")
+routers.register(r"users", UserViewSet, "users")
+routers.register(r"conversations", ConversationViewSet, basename="conversations")
+routers.register(r"messages", MessageViewSet, basename="messages")
 
 
 
@@ -39,4 +45,7 @@ urlpatterns = [
     path ('api-token-auth/', TokenObtainPairView.as_view()),
     path ('api-token-refresh/', TokenRefreshView.as_view()),
     path ('api-token-verify/', TokenVerifyView.as_view()),
+     path('token/', CustomObtainAuthTokenView.as_view(), name='token_obtain_pair'),
+    # path('users/<str:username>/', user_detail_view, name='user_detail'),
+    # path('users/<str:username>/update/', user_update_view, name='user_update'),
 ]
