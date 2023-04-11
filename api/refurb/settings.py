@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-etg&^5cw$44noejp33489*umfn0tnp1@jqt(x2nh@unghxls1o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  'localhost', '.herokuapp.com', 
+  
+]
 
 
 # Application definition
@@ -98,10 +101,10 @@ ASGI_APPLICATION = "refurb.routing.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'refurb',
-        'USER': 'basammoses',
-        'PASSWORD': '819addceb4',
-        'HOST': 'localhost'
+        'NAME': 'd7671d5ujeuhue',
+        'USER': 'lqklytolxtwlob',
+        'PASSWORD': '158a1398f5392d8a478f0e9fd3652ad33c9b389d241a9f6cd371903babfab80d',
+        'HOST': 'ec2-3-92-151-217.compute-1.amazonaws.com'
     }
 }
 
@@ -179,7 +182,7 @@ CORS_ALLOW_ALL_HEADERS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5173"
+    "http://localhost:3000", "http://localhost:5173",
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True
