@@ -1,13 +1,17 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import { ConversationModel } from "../models/Conversation";
+
 
 export function ActiveConversations() {
   const { user } = useContext(AuthContext);
   const [conversations, setActiveConversations] = useState<ConversationModel[]>(
     []
   );
+  const [name, setName] = useState<string>("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchUsers() {
@@ -29,9 +33,36 @@ export function ActiveConversations() {
     const date = new Date(timestamp);
     return date.toLocaleTimeString().slice(0, 5);
   }
+  
+  function onChange(e: any) {
+    setName(e.target.value);
+    console.log(name)
+  }
+
+  function onSubmit(e: any) {
+    e.preventDefault();
+    console.log(name)
+    window.location.href =`http://localhost:5173/chats/${name}`
+
+    
+    
+  }
+
+  
 
   return (
     <div>
+      <form>
+        <input type="text" onChange={onChange} value={name} placeholder="create a room!" />
+        <Link
+          to={`/chats/${name}`}
+          key={name}
+      
+        >
+          <button>create!</button>
+        </Link>
+
+      </form>
       {conversations.map((c) => (
         <Link
           to={`/chats/${c.name}`}
@@ -42,16 +73,17 @@ export function ActiveConversations() {
             <h3 className="text-xl font-semibold text-gray-800">
               {c.name}
             </h3>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <p className="text-gray-700">{c.last_message?.content}</p>
               <p className="text-gray-700">
                 {formatMessageTimestamp(c.last_message?.timestamp)}
               </p>
               <p className="text-gray-700">sender</p>
-            </div>
+            </div> */}
           </div>
         </Link>
       ))}
+      
     </div>
   );
 }

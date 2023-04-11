@@ -7,6 +7,8 @@ from django.core.asgi import get_asgi_application
 import os
 import sys
 from pathlib import Path
+from channels.auth import AuthMiddlewareStack
+
 
 
 
@@ -14,13 +16,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web_project.settings')
 
 
 websocket_urlpatterns = [
-    path("chats/<conversation_name>/", ChatConsumer.as_asgi()),
+    path("chats/<conversation_name>/<user>", ChatConsumer.as_asgi()),
 ]
 
 
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
-        "websocket": TokenAuthMiddleware(URLRouter(websocket_urlpatterns)),
+        "websocket": (URLRouter(websocket_urlpatterns)),
     }
 )

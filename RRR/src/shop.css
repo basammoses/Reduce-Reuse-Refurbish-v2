@@ -179,7 +179,7 @@ header{
   width: 360px;
   min-height: 100vh;
   padding: 20px;
-  background: var(--bg-color);
+  background: white;
   box-shadow: -2px 0 4px hsl(0 4% 15% / 10%);
   transition: 0.5s;
 }
@@ -245,8 +245,8 @@ header{
   display: flex;
   margin: 1.5rem auto 0 auto;
   padding: 12px 20px;
-  background: var(--main-color);
-  color: rgb(255, 255, 255);
+  background: blue,;
+  color: rgb(0, 30, 255);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;

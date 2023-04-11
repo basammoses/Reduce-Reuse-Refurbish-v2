@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import InventoryContext from '../contextprovider/inventorycontext';
 import { GetShoppingCart } from './cartcontent';
 import { useToast } from '@chakra-ui/toast';
-
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 
 // type Inventory = {
@@ -66,6 +66,8 @@ export default function ShopContent() {
   // createContext(cartItems)
 
   const inv = useContext(InventoryContext)
+  const axiosPrivateInstance = useAxiosPrivate()
+
 
 
 
@@ -87,7 +89,7 @@ export default function ShopContent() {
     console.log(a, b)
     setCartItems([...cartItems, item])
     console.log(inv)
-    api.post('/cart/add_product/', item).then(() => {
+    axiosPrivateInstance.post('cart/add_product/', item).then(() => {
       childRef.current.fetchCart();
     }).then(() => {
 

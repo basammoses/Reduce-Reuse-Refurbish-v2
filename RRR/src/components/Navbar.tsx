@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { Outlet, Link } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+// import { AuthContext } from "../contexts/AuthContext";
 import { NotificationContext } from "../contexts/NotificationContext";
 
-export function Navbar() {
-  const { user, logout } = useContext(AuthContext);
+
+export function Navbar2() {
+  // const { user, logout } = useContext(AuthContext);
   const { unreadMessageCount } = useContext(NotificationContext);
   return (
     <>
@@ -75,7 +76,7 @@ export function Navbar() {
                   Chats
                 </Link>
               </li>
-              {!user ? (
+              {/* {!user ? ( */}
                 <li>
                   <Link
                     to="/login"
@@ -84,17 +85,17 @@ export function Navbar() {
                     Login
                   </Link>
                 </li>
-              ) : (
+              {/* ) : ( */}
                 <>
-                  <span className="text-white">Logged in: {user.username}</span>
+                  <span className="text-white">Logged in: </span>
                   <button
                     className="block py-2 pr-4 pl-3 text-white md:p-0 dark:text-white"
-                    onClick={logout}
+                    onClick={console.log}
                   >
                     Logout
                   </button>
                 </>
-              )}
+              {/* )} */}
               <li>
                 <Link
                   to="/store"

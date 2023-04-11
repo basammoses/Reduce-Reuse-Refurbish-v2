@@ -15,41 +15,19 @@ export function Message({ message }: { message: MessageModel }) {
   }
 
   return (
-    <li
-      className={classNames(
-        "mt-1 mb-1 flex",
-       
-           "justify-start"
-          
-      )}
-    >
-      <div
-        className={classNames(
-          "relative max-w-xl rounded-lg px-2 py-1 text-gray-700 shadow",
-          "bg-gray-100"
-        )}
-      >
-        <div className="flex items-end">
-          <span className="block">{message.from_user.username}</span>
-          <span
-            className="ml-2"
-            style={{
-              fontSize: "0.6rem",
-              lineHeight: "1rem",
-            }}
-          ></span>
-          <span className="block">{message.content}</span>
-          <span
-            className="ml-2"
-            style={{
-              fontSize: "0.6rem",
-              lineHeight: "1rem",
-            }}
-          >
-            {formatMessageTimestamp(message.timestamp)}
-          </span>
-        </div>
+    <li className={"mt-1 mb-1 flex justify-start"}>
+    <div className={"relative max-w-xl rounded-lg px-2 py-1 text-gray-700 shadow bg-gray-100"}>
+      <div className="flex items-end">
+        <span className="d-block">{message.from_user.username}</span>
+        <span className="ml-2" style={{fontSize: "0.6rem", lineHeight: "1rem"}}></span>
+        <span className="d-block">{message.content}</span>
+        <span className="ml-2" style={{fontSize: "0.6rem", lineHeight: "1rem"}}>
+          {formatMessageTimestamp(message.timestamp)}
+        </span>
       </div>
-    </li>
+    </div>
+  </li>
+  
+  
   );
 }

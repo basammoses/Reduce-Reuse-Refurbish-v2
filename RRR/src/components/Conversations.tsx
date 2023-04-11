@@ -53,6 +53,7 @@ export function Conversations() {
   
 
   return (
+    <>
     <div>
       {conversations
         .map((u) => (
@@ -63,6 +64,10 @@ export function Conversations() {
             <div>{u.name}</div>
           </Link>
         ))}
-    </div>
+      
+      </div>
+      
+        
+      </>
   );
 }

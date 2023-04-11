@@ -1,9 +1,11 @@
 from django.contrib import admin
 
-from .models import Products, Carts
+from .models import Products, Carts,Account
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from django.contrib.auth import get_user_model
 
+user = get_user_model()
 
 class ProductsResource(resources.ModelResource):
     class Meta:
@@ -22,6 +24,7 @@ class ProductsAdmin(ImportExportModelAdmin):
 #     class Meta:
 #         model = Orders
 
+
 # class OrdersAdmin(ImportExportModelAdmin):
 #     resource_class = OrdersResource
 #     list_display = ('date', 'products', 'quantities', 'total_price', 'delivery_method', 'payment_method')
@@ -35,6 +38,9 @@ class CartsResource(resources.ModelResource):
 
 
 
+
+
+admin.site.register(Account)
 admin.site.register(Products, ProductsAdmin)
 # admin.site.register(Orders, OrdersAdmin)
 admin.site.register(Carts)

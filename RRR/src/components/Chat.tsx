@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useHotkeys } from "react-hotkeys-hook";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../store/auth-context";
 import { MessageModel } from "../models/Message";
 import { Message } from "./Message";
 import { ChatLoader } from "./ChatLoader";
@@ -12,7 +12,7 @@ import '../shop.css'
 
 export function Chat() {
   const { conversationName } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, refreshToken,accessToken } = useContext(AuthContext);
   const [participants, setParticipants] = useState<string[]>([]);
   const [conversation, setConversation] = useState<ConversationModel | null>(
     null
@@ -25,6 +25,10 @@ export function Chat() {
   const [typing, setTyping] = useState(false);
   const [socketUrl, setSocketUrl] = useState(`ws://asl-back.herokuapp.com/chats/${conversationName}/`);
 
+  useEffect(() => {
+    console.log(accessToken);
+  }, [user, refreshToken]);
+
 
   function updateTyping(event: { user: string; typing: boolean }) {
     if (event.user !== user!.username) {
@@ -33,11 +37,9 @@ export function Chat() {
   }
 
   const { readyState, sendJsonMessage } = useWebSocket(
-    user ? `ws://localhost:8000/chats/${conversationName}/` : null,
+    user ? `ws://localhost:8000/chats/${conversationName}/${user.username}` : null,
     {
-      queryParams: {
-        token: user ? user.token : "",
-      },
+      
       onOpen: () => {
         console.log("Connected!");
       },
@@ -181,7 +183,7 @@ export function Chat() {
   useEffect(() => {
     async function fetchConversation() {
       const apiRes = await fetch(
-        `http://localhost:8000/${conversationName}/`,
+        `http://localhost:8000/conversations/${conversationName}/`,
         {
           method: "GET",
           headers: {
@@ -194,6 +196,7 @@ export function Chat() {
       if (apiRes.status === 200) {
         const data: ConversationModel = await apiRes.json();
         setConversation(data);
+        console.log(conversationName)
       }
     }
     fetchConversation();
@@ -201,64 +204,57 @@ export function Chat() {
 
   return (
     <div>
-      <span>The n is currently {connectionStatus}</span>
-      {conversation && (
-        <div className="py-6">
-          <h3 className="text-3xl font-semibold text-gray-900">
-            Chat with user: {conversation.name}
-          </h3>
-          {/* <span className="text-sm">
-            {conversation.other_user.username} is currently
-            {participants.includes(conversation.other_user.username)
-              ? " online"
-              : " offline"}
-          </span> */}
-          {typing && (
-            <p className="truncate text-sm text-gray-500">typing...</p>
-          )}
-        </div>
+  <span class="d-block">The n is currently {connectionStatus}</span>
+  {conversation && (
+    <div class="py-6">
+      <h3 class="text-3xl font-semibold text-gray-900">
+        {conversation.name}
+      </h3>
+      {typing && (
+        <p class="truncate text-sm text-gray-500">typing...</p>
       )}
-
-      <div className="flex w-full items-center justify-between border border-gray-200 p-3">
-        <input
-          type="text"
-          placeholder="Message"
-          className="block w-full rounded-full bg-gray-100 py-2 outline-none focus:text-gray-700"
-          name="message"
-          value={message}
-          onChange={handleChangeMessage}
-          required
-          ref={inputReference}
-          maxLength={511}
-        />
-        <button className="ml-3 bg-gray-300 px-3 py-1" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
-
-      <div
-        id="scrollableDiv"
-        className={
-          "h-[20rem] mt-3 flex flex-col-reverse relative w-full border border-gray-200 overflow-y-auto p-6"
-        }
-      >
-        <div>
-          {/* Put the scroll bar always on the bottom */}
-          <InfiniteScroll
-            dataLength={messageHistory.length}
-            next={fetchMessages}
-            className="flex flex-col-reverse" // To put endMessage and loader to the top
-            inverse={true}
-            hasMore={hasMoreMessages}
-            loader={<ChatLoader />}
-            scrollableTarget="scrollableDiv"
-          >
-            {messageHistory.map((message: MessageModel) => (
-              <Message key={message.id} message={message} />
-            ))}
-          </InfiniteScroll>
-        </div>
-      </div>
     </div>
+  )}
+
+  <div class="d-flex w-100 items-center justify-content-between border border-gray-200 p-3">
+    <input
+      type="text"
+      placeholder="Message"
+      class="form-control rounded-full bg-gray-100 py-2 outline-none focus:text-gray-700"
+      name="message"
+      value={message}
+      onChange={handleChangeMessage}
+      required
+      ref={inputReference}
+      maxLength={511}
+    />
+    <button class="btn btn-secondary ml-3" onClick={handleSubmit}>
+      Submit
+    </button>
+  </div>
+
+  <div
+    id="scrollableDiv"
+    class="h-20rem mt-3 flex flex-col-reverse relative w-100 border border-gray-200 overflow-y-auto p-6"
+  >
+    <div>
+      {/* Put the scroll bar always on the bottom */}
+      <InfiniteScroll
+        dataLength={messageHistory.length}
+        next={fetchMessages}
+        class="flex flex-col-reverse" // To put endMessage and loader to the top
+        inverse={true}
+        hasMore={hasMoreMessages}
+        loader={<ChatLoader />}
+        scrollableTarget="scrollableDiv"
+      >
+        {messageHistory.map((message: MessageModel) => (
+          <Message key={message.id} message={message} />
+        ))}
+      </InfiniteScroll>
+    </div>
+  </div>
+</div>
+
   );
 }

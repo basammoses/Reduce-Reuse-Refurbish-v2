@@ -36,9 +36,10 @@ class ChatConsumer(JsonWebsocketConsumer):
         self.conversation = None
 
     def connect(self):
-        self.user = self.scope["user"]
-        if not self.user.is_authenticated:
-            return
+        self.user = f"{self.scope['url_route']['kwargs']['user']}"
+        
+        
+        
 
         self.accept()
         self.conversation_name = (
@@ -53,22 +54,22 @@ class ChatConsumer(JsonWebsocketConsumer):
             self.channel_name,
         )
 
-        self.send_json(
-            {
-                "type": "online_user_list",
-                "users": [user.username for user in self.conversation.online.all()],
-            }
-        )
+        # self.send_json(
+        #     {
+        #         "type": "online_user_list",
+        #         "users": [user.username for user in self.conversation.online.all()],
+        #     }
+        # )
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.conversation_name,
-            {
-                "type": "user_join",
-                "user": self.user.username,
-            },
-        )
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.conversation_name,
+        #     {
+        #         "type": "user_join",
+        #         "user": self.user,
+        #     },
+        # )
 
-        self.conversation.online.add(self.user)
+        # self.conversation.online.add(self.user)
 
         messages = self.conversation.messages.all().order_by("-timestamp")[0:10]
         message_count = self.conversation.messages.all().count()
@@ -90,44 +91,48 @@ class ChatConsumer(JsonWebsocketConsumer):
                     "user": self.user.username,
                 },
             )
-            self.conversation.online.remove(self.user)
+            # self.conversation.online.remove(self.user)
         return super().disconnect(code)
 
-    def get_receivers(self):
-        return self.conversation.online.all().exclude(username=self.user.username)
+    # def get_receivers(self):
+    #     return self.conversation.online.all().exclude(username=self.user)
     
 
     def receive_json(self, content, **kwargs):
         message_type = content["type"]
 
-        if message_type == "read_messages":
-            messages_to_me = self.conversation.messages.filter(from_user=self.user)
-            messages_to_me.update(read=True)
+        # if message_type == "read_messages":
+        #     messages_to_me = self.conversation.messages.filter(from_user=self.user)
+        #     messages_to_me.update(read=True)
 
             # Update the unread message count
-            unread_count = Message.objects.filter(from_user= self.user, read=False).count()
-            async_to_sync(self.channel_layer.group_send)(
-                self.user.username + "__notifications",
-                {
-                    "type": "unread_count",
-                    "unread_count": unread_count,
-                },
-            )
+            # unread_count = Message.objects.filter(from_user= self.user, read=False).count()
+            # async_to_sync(self.channel_layer.group_send)(
+            #     self.user.username + "__notifications",
+            #     {
+            #         "type": "unread_count",
+            #         "unread_count": unread_count,
+            #     },
+            # )
 
         if message_type == "typing":
             async_to_sync(self.channel_layer.group_send)(
                 self.conversation_name,
                 {
                     "type": "typing",
-                    "user": self.user.username,
+                    "user": self.user,
                     "typing": content["typing"],
                 },
             )
 
         if message_type == "chat_message":
-
+            user1 ={"username": self.user,
+                            "email": f"{self.user}@gmail.com"}
+            
+            
             message = Message.objects.create(
-                from_user=self.user,
+                from_user= User.objects.get(username=self.user),
+                
                 content=content["message"],
                 conversation=self.conversation,
             )
@@ -136,7 +141,7 @@ class ChatConsumer(JsonWebsocketConsumer):
                 self.conversation_name,
                 {
                     "type": "chat_message_echo",
-                    "name": self.user.username,
+                    "name": self.user,
                     "message": MessageSerializer(message).data,
                 },
             )
@@ -156,8 +161,8 @@ class ChatConsumer(JsonWebsocketConsumer):
     def chat_message_echo(self, event):
         self.send_json(event)
 
-    def user_join(self, event):
-        self.send_json(event)
+    # def user_join(self, event):
+    #     self.send_json(event)
 
     def user_leave(self, event):
         self.send_json(event)
@@ -168,8 +173,8 @@ class ChatConsumer(JsonWebsocketConsumer):
     # def new_message_notification(self, event):
     #     self.send_json(event)
 
-    def unread_count(self, event):
-        self.send_json(event)
+    # def unread_count(self, event):
+    #     self.send_json(event)
 
     @classmethod
     def encode_json(cls, content):

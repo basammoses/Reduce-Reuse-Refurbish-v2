@@ -2,7 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from django.conf import settings
 User = get_user_model()
 
 
@@ -33,9 +33,8 @@ class Message(models.Model):
     conversation = models.ForeignKey(
         Conversation, on_delete=models.CASCADE, related_name="messages"
     )
-    from_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="messages_from_me"
-    )
+    from_user = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="messages")
+    
     
 
     content = models.CharField(max_length=512)

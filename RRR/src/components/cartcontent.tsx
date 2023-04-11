@@ -5,12 +5,13 @@ import { useState, useEffect,useContext} from "react";
 import axios from "axios";
 import CartContext from "../contextprovider/cartcontext";
 import classNames from "classnames";
-
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 interface CartItem {
   "productName": string,
   "price": number,
   "img": string
 }
+
 
 let config = {
   headers: {
@@ -36,6 +37,8 @@ export const GetShoppingCart = forwardRef((props,ref) => {
 
 
   const [cart, setCartItems] = useState<CartItem[]>([]);
+  const [total, setTotal] = useState()
+
 
   const openCart = () => {
     const cart = document.querySelector('.cart');
@@ -54,7 +57,7 @@ export const GetShoppingCart = forwardRef((props,ref) => {
 
 
 
-  
+const axiosPrivateInstance = useAxiosPrivate();
   
   
   
@@ -63,9 +66,13 @@ export const GetShoppingCart = forwardRef((props,ref) => {
   
 
   async function fetchCart() {
-    const { data: response } = await api.get('/cart');
+    const { data: response1 } = await axiosPrivateInstance.post('/cart/create_cart/');
+    const { data: response } = await axiosPrivateInstance.get('/cart/');
+    console.log(response[0].products)
     console.log(response)
-    setCartItems(response)
+    setCartItems(response[0].products)
+    setTotal(response[0].total_price)
+
   }
 
 
@@ -85,29 +92,43 @@ export const GetShoppingCart = forwardRef((props,ref) => {
     
   const handleDelete = (item) => {
     console.log(item.productName)
-    api.delete(`/carts/${item.productName}`, config)
+    axiosPrivateInstance.post(`/cart/remove_product/`, { productName: item.productName })
       .then((response) => {
         console.log(response)
         fetchCart()
       })
-    
+  
   
 
     
   
   }
 
+  const handleCheckout = () => {
+    axiosPrivateInstance.delete(`/cart/delete_cart/`)
+      .then((response) => {
+        console.log(response)
+        fetchCart()
+      })
+  }
   
   return (
         <div className="nav container">
           <a href="#" className="logo">Reduce Reuse Refurbish</a>
           <i className='bx bx-shopping-bag' id="cart-icon" onClick={openCart}></i>
+      
+      <div className="cart">
+      {cart.length > 0 ? (
+        <h2 className="cart-title">Your Cart</h2>
+      ) : (
+        <h2 className="cart-title">Your Cart is Empty!, Add some items!</h2>
+      )}
+        
+        {/* {cart.length === 0 && <div className="cart-empty">Your cart is empty</div>} */}
+        
+        <div className="cart-content">
           
-          <div className="cart">
-            <h2 className="cart-title">Your Cart</h2>
-            
-      <div className="cart-content">
-      {cart && cart.map((item) => (
+      {cart.length > 0 && cart.map((item) => (
         <div className="cart-box">
         <img src={item.img} alt="" className="cart-img"/>
         <div className="detail-box">
@@ -120,13 +141,18 @@ export const GetShoppingCart = forwardRef((props,ref) => {
         </div>
     
       ))}
-      </div>
-            <div className= 'total'>
+        </div>
+      
+        {cart.length > 0 && 
+        <>
+        <div className= 'total'>
               <div className="total-title">Total</div>
-              <div className="total-price">$</div>
+          <div className="total-price">${total }</div>
             </div>
 
-            <button type="button" className="btn-buy" >Buy Now</button>
+          <button type="button" className="btn-buy" onClick={handleCheckout} >Buy Now</button>
+          </>}
+          
             <i 
             className={`bx bx-x`}  id='close-cart' onClick={closeCart}></i>
 

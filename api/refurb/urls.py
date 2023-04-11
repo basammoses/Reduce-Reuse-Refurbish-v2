@@ -22,8 +22,9 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from .api_router import CustomObtainAuthTokenView, UserViewSet, MessageViewSet, ConversationViewSet
+from .api_router import CustomObtainAuthTokenView,  MessageViewSet, ConversationViewSet
 from django.views.generic import TemplateView
+from cart import views
 
 
 
@@ -32,7 +33,7 @@ from django.views.generic import TemplateView
 routers = routers.DefaultRouter()
 routers.register(r"products", views.ProductsViewSet, "products")
 routers.register(r"cart", views.CartViewSet, "cart")
-routers.register(r"users", UserViewSet, "users")
+# routers.register(r"users", UserViewSet, "users")
 routers.register(r"conversations", ConversationViewSet, basename="conversations")
 routers.register(r"messages", MessageViewSet, basename="messages")
 
@@ -41,11 +42,11 @@ routers.register(r"messages", MessageViewSet, basename="messages")
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(routers.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path ('api-token-auth/', TokenObtainPairView.as_view()),
-    path ('api-token-refresh/', TokenRefreshView.as_view()),
-    path ('api-token-verify/', TokenVerifyView.as_view()),
-     path('token/', CustomObtainAuthTokenView.as_view(), name='token_obtain_pair'),
+    path('login', views.loginView),
+    path('register', views.registerView),
+    path('refresh-token', views.CookieTokenRefreshView.as_view()),
+    path('logout', views.logoutView),
+    path("user", views.user),
     # path('users/<str:username>/', user_detail_view, name='user_detail'),
     # path('users/<str:username>/update/', user_update_view, name='user_update'),
 ]

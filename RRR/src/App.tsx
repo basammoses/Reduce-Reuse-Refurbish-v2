@@ -1,79 +1,34 @@
+import react from 'react'
+import './App.css';
+import AuthMiddleware from './middleware/Auth';
+import Login from './views/Auth/Login';
+import Register from './views/Auth/Register';
+import Home from './views/Home';
+import User from './views/Auth/User'
+import PersistLogin from './components/PersistLogin';
+import Navbar from "./components/Navbar2"
 import React from "react";
 import { useState,useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,Navigate } from "react-router-dom";
 import { ActiveConversations } from "./components/ActiveConversations";
 import { Chat } from "./components/Chat";
 import { Conversations } from "./components/Conversations";
-import { Login } from "./components/Login";
-import { Navbar } from "./components/Navbar";
+import { Navbar2 } from "./components/Navbar";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { AuthContextProvider } from "./contexts/AuthContext";
+// import { AuthContextProvider } from "./contexts/AuthContext";
 import { NotificationContextProvider } from "./contexts/NotificationContext";
-import Homepage from './components/homepage'
-import InventoryContext from './contextprovider/inventorycontext'
-import { Inventory } from './contextprovider/inventorycontext'
-import CartContext from './contextprovider/cartcontext'
-import { CartItem } from './contextprovider/cartcontext'
-import { AuthProvider } from './firebaseAuth/AuthProvider'
-import axios from 'axios'
-
-
-let config = {
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-  }
-}
-
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000'
-});
-
-export default function App() {
-  const [inventory, setInventory] = useState<Inventory[]>([])
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(false)
-
-
-  useEffect(() => {
-
-    async function fetchData() {
-      setLoading(true);
-      const { data: response } = await api.get('/products');
-      setInventory(response)
-      setLoading(false);
-    }
-
-    fetchData()
-  }, [])
 
 
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <AuthContextProvider>
-              <NotificationContextProvider>
-                <Navbar />
-              </NotificationContextProvider>
-            </AuthContextProvider>
-          }
-        >
-          <Route path="/store" element={<CartContext.Provider value={cartItems}>
-          <InventoryContext.Provider value={inventory}>
 
-            <Homepage />
-
-          </InventoryContext.Provider>
-        </CartContext.Provider>} />
-
-
-          <Route
-            path=""
+function App() {
+  return<>
+    <Navbar />
+    <Routes>
+   
+      <Route path='/' element={<PersistLogin />}>
+      <Route
+            path="convo"
             element={
               <ProtectedRoute>
                 <Conversations />
@@ -81,7 +36,7 @@ export default function App() {
             }
           />
           <Route
-            path="conversations/"
+            path="conversations"
             element={
               <ProtectedRoute>
                 <ActiveConversations />
@@ -96,9 +51,18 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="login" element={<Login />} />
+        <Route index exact element={<Home />}></Route>
+        <Route path='/auth'>
+          <Route path='login' element={<Login />}></Route>
+          <Route path='register' element={<Register />}></Route>
+          <Route path='user' element={<AuthMiddleware />}>
+            <Route index element={<User />}></Route>
+          </Route>
         </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+      </Route>
+      {/* <Route path='*' element={<Navigate to='/' />}></Route> */}
+    </Routes>
+  </>
 }
+
+export default App;
