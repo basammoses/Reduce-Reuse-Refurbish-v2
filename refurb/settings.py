@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-etg&^5cw$44noejp33489*umfn0tnp1@jqt(x2nh@unghxls1o
 DEBUG = True
 
 ALLOWED_HOSTS = [
-  'localhost', '.herokuapp.com', 
+  'localhost', '.herokuapp.com', 'https://reduce.herokuapp.com' 
   
 ]
 
@@ -67,7 +67,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-  "http://localhost:3000","http://localhost:8000","http://localhost:5173"
+  "http://localhost:3000","http://localhost:8000","http://localhost:5173" "https://reduce.herokuapp.com"
 ]
 CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
                       'content-type', 'accept', 'origin', 'authorization')
@@ -184,7 +184,7 @@ CORS_ALLOW_ALL_HEADERS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5173",
+    "http://localhost:3000", "http://localhost:5173", "https://reduce.herokuapp.com"
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 SESSION_COOKIE_SECURE = True

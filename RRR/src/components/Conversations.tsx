@@ -25,7 +25,7 @@ export function Conversations() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const res = await fetch("http://localhost:8000/users/", {
+      const res = await fetch("https://reduce.herokuapp.com/users/", {
         headers: {
           Authorization: `Token ${user?.token}`,
         },
@@ -39,7 +39,7 @@ export function Conversations() {
 
   useEffect(() => {
     async function fetchConversations() {
-      const res = await fetch("http://localhost:8000/conversations/", {
+      const res = await fetch("https://reduce.herokuapp.com/conversations/", {
         headers: {
           Authorization: `Token ${user?.token}`,
         },

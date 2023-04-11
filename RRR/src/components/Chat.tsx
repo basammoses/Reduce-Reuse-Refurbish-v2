@@ -37,7 +37,7 @@ export function Chat() {
   }
 
   const { readyState, sendJsonMessage } = useWebSocket(
-    user ? `ws://localhost:8000/chats/${conversationName}/${user.username}` : null,
+    user ? `wss://reduce.herokuapp.com/chats/${conversationName}/${user.username}` : null,
     {
       
       onOpen: () => {
@@ -183,7 +183,7 @@ export function Chat() {
   useEffect(() => {
     async function fetchConversation() {
       const apiRes = await fetch(
-        `http://localhost:8000/conversations/${conversationName}/`,
+        `https://reduce.herokuapp.com/conversations/${conversationName}/`,
         {
           method: "GET",
           headers: {

@@ -15,7 +15,7 @@ export function ActiveConversations() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const res = await fetch("http://localhost:8000/conversations/", {
+      const res = await fetch("https://reduce.herokuapp.com/", {
         headers: {
           Authorization: `Token ${user?.token}`,
         },
@@ -39,14 +39,7 @@ export function ActiveConversations() {
     console.log(name)
   }
 
-  function onSubmit(e: any) {
-    e.preventDefault();
-    console.log(name)
-    window.location.href =`http://localhost:5173/chats/${name}`
-
-    
-    
-  }
+ 
 
   
 

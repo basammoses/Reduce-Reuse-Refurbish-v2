@@ -8,7 +8,7 @@ class AuthService {
   }
 
   async login(username: string, password: string): Promise<UserModel> {
-    const response = await axios.post("http://localhost:8000/token/", { username, password });
+    const response = await axios.post("https://reduce.herokuapp.com/token/", { username, password });
     console.log(response.data)
     if (!response.data.token) {
       return response.data;
