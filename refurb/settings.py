@@ -253,3 +253,4 @@ CHANNEL_LAYERS = {
     }
 }
 
+STATIC_URL = 'static/'
