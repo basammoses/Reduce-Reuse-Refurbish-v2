@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link,NavLink } from 'react-router-dom'
 import { axiosInstance } from '../../axios/axios'
 import useAuth from '../../hooks/useAuth'
 
@@ -67,6 +67,10 @@ export default function Login() {
           <button disabled={loading} className='btn btn-success' type="submit">Login</button>
         </div>
       </form>
+      <NavLink to={'/auth/register'}>
+       Click to Register!
+      </NavLink>
+      
     </div>
   )
 }

@@ -113,10 +113,11 @@ const axiosPrivateInstance = useAxiosPrivate();
   }
   
   return (
-        <div className="nav container">
-          <a href="#" className="logo">Reduce Reuse Refurbish</a>
+    
+        <div className="">
+          
           <i className='bx bx-shopping-bag' id="cart-icon" onClick={openCart}></i>
-      
+
       <div className="cart">
       {cart.length > 0 ? (
         <h2 className="cart-title">Your Cart</h2>

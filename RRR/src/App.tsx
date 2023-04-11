@@ -30,28 +30,35 @@ function App() {
       <Route
             path="convo"
             element={
-              <ProtectedRoute>
+              
                 <Conversations />
-              </ProtectedRoute>
+              
             }
           />
           <Route
             path="conversations"
             element={
-              <ProtectedRoute>
-                <ActiveConversations />
-              </ProtectedRoute>
+              
+                <AuthMiddleware />
+              
             }
-          />
+        >
+          <Route index element={<ActiveConversations />}></Route>
+           </Route>
           <Route
             path="chats/:conversationName"
             element={
-              <ProtectedRoute>
+              
                 <Chat />
-              </ProtectedRoute>
+              
             }
-          />
-        <Route index exact element={<Home />}></Route>
+        />
+        
+        <Route path='/' element={<Home></Home>}>
+          
+
+        </Route>
+        
         <Route path='/auth'>
           <Route path='login' element={<Login />}></Route>
           <Route path='register' element={<Register />}></Route>
@@ -60,7 +67,6 @@ function App() {
           </Route>
         </Route>
       </Route>
-      {/* <Route path='*' element={<Navigate to='/' />}></Route> */}
     </Routes>
   </>
 }

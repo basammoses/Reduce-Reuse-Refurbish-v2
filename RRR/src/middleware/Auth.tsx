@@ -5,6 +5,6 @@ export default function AuthMiddleware() {
     const { accessToken } = useAuth()
     const location = useLocation()
 
-    return (accessToken ? <Outlet /> : <Navigate to="/" state={{ from: location }} replace />)
+    return (accessToken ? <Outlet /> : <Navigate to="/auth/login" state={{ from: location }} replace />)
 
 }
