@@ -4,6 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+django = "*"
+psycopg2-binary = "*"
+django-extensions = "*"
+ipython = "*"
+django-import-export = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+djangorestframework-jwt = "*"
+djangorestframework-simplejwt = "*"
+channels = "*"
+asgiref = "*"
+
+gunicorn = "*"
+dj-database-url = "*"
+daphne = "*"
+channels-redis = "*"
 
 [dev-packages]
 
