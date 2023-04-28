@@ -15,7 +15,7 @@ export function ActiveConversations() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const res = await fetch("https://reduce.herokuapp.com/", {
+      const res = await fetch("https://reduce.herokuapp.com/conversations", {
         headers: {
           Authorization: `Token ${user?.token}`,
         },
